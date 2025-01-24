@@ -1,19 +1,24 @@
 <template>
     <div class="features-overview">
-        <h2>How It Works</h2>
-        <div class="steps-container">
-            <div class="step" v-for="(step, index) in steps" :key="index">
-                <div class="step-header">
-                    <h3>{{ step.title }}</h3>
-                    <i :class="step.iconClass"></i>
+        <div class="features-content">
+            <h2>How It Works</h2>
+            <div class="steps-container">
+                <div class="step" v-for="(step, index) in steps" :key="index" ref="steps"
+                    :class="{ 'step-visible': isVisible(index) }">
+                    <div class="step-header">
+                        <h3>{{ step.title }}</h3>
+                        <i :class="step.iconClass"></i>
+                    </div>
+                    <p class="terminal-text">{{ step.description }}</p>
                 </div>
-                <p>{{ step.description }}</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
 const steps = [
     {
         title: "Step 1: Choose the Log File",
@@ -36,6 +41,37 @@ const steps = [
         iconClass: "fab fa-google-drive"
     }
 ];
+
+const visibleSteps = ref([]);
+
+
+const isVisible = (index) => visibleSteps.value.includes(index);
+
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.index);
+            if (!visibleSteps.value.includes(index)) {
+                visibleSteps.value.push(index);
+            }
+        }
+    });
+}, {
+    threshold: 0.5,
+});
+
+onMounted(() => {
+    const elements = document.querySelectorAll('.step');
+    elements.forEach((el, index) => {
+        el.dataset.index = index;
+        observer.observe(el);
+    });
+});
+
+onBeforeUnmount(() => {
+    observer.disconnect();
+});
 </script>
 
 <style scoped>
@@ -43,31 +79,36 @@ const steps = [
 
 .features-overview {
     padding: 60px 40px;
-    background-color: #f8f8f8;
-    max-width: 1200px;
-    margin: 0 auto;
+    background-color: #222222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-family: 'Poppins', sans-serif;
-    color: #333;
+    color: #e0e0e0;
+    width: 100%;
 }
 
 .features-overview h2 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    color: #333;
-    margin-bottom: 50px;
-    text-align: left;
+    color: #FFA500;
+    margin-bottom: 30px;
     letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: left;
+    width: 100%;
 }
 
 .steps-container {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    align-items: flex-start;
+    align-items: center;
+    width: 100%;
 }
 
 .step {
-    background-color: #fff;
+    background-color: #333333;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -79,8 +120,13 @@ const steps = [
     position: relative;
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInUp 0.6s forwards;
+    transition: opacity 0.5s, transform 0.5s;
     border-left: 5px solid #FFA500;
+}
+
+.step.step-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .step-header {
@@ -92,7 +138,7 @@ const steps = [
 
 .step-header h3 {
     font-size: 1.5rem;
-    color: #333;
+    color: #FFA500;
     font-weight: 600;
     margin: 0;
     flex: 1;
@@ -110,17 +156,32 @@ const steps = [
     transform: scale(1.1);
 }
 
-.step p {
+.terminal-text {
     font-size: 1rem;
-    color: #666;
+    color: #e0e0e0;
     line-height: 1.6;
     margin-top: 10px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
+/* Responsividade */
+@media (max-width: 1024px) {
+    .features-overview {
+        padding: 50px 30px;
+    }
+
+    .step {
+        padding: 20px;
+        width: 90%;
+    }
+
+    .step-header h3 {
+        font-size: 1.4rem;
+    }
+
+    .step-header i {
+        font-size: 28px;
     }
 }
 
@@ -130,16 +191,43 @@ const steps = [
     }
 
     .step {
-        padding: 20px;
-        max-width: 100%;
+        padding: 18px;
+        width: 100%;
+        margin-bottom: 20px;
     }
 
     .step-header h3 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
     .step-header i {
-        font-size: 28px;
+        font-size: 24px;
+    }
+
+    .terminal-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .features-overview {
+        padding: 30px 15px;
+    }
+
+    .step {
+        padding: 15px;
+    }
+
+    .step-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .step-header i {
+        font-size: 22px;
+    }
+
+    .terminal-text {
+        font-size: 0.85rem;
     }
 }
 </style>
