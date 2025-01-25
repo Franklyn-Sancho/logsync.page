@@ -7,6 +7,7 @@
             </div>
             <div class="get-started-menu">
                 <button class="get-started-button">Get Started</button>
+                <a class="documentation-link" href="/">Documentation</a>
             </div>
         </div>
     </header>
@@ -105,25 +106,7 @@ const handleLanguageChange = (event) => {
     color: #e67e22;
 }
 
-.language-dropdown {
-    background-color: transparent;
-    color: #333;
-    border: none;
-    padding: 10px 30px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    height: 40px;
-}
 
-.language-dropdown:focus {
-    outline: none;
-    border-color: #FF5C00;
-}
-
-.language-dropdown option {
-    color: #000;
-}
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -161,6 +144,10 @@ const handleLanguageChange = (event) => {
     .get-started-menu .get-started-button {
         padding: 15px 40px;
         font-size: 1rem;
+    }
+
+    .get-started-menu .documentation-link {
+        font-size: 1.0rem;
     }
 }
 </style>

@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
 .steps-container {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
     align-items: center;
     width: 100%;
 }

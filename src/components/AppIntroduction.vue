@@ -173,7 +173,6 @@ const goToSignup = () => {
 
     .text p {
         font-size: 0.9rem;
-        max-width: 300px;
     }
 
     .cta-button button {
